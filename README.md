@@ -75,6 +75,6 @@ my_proj/
 git status
 
 Фиксируем и отправляем изменения на GitHub:
-git add README.md requirements.txt eda/
-git commit -m ""
-git push origin master
+git add README.md eda/ data/
+git commit -m "Добавил изменения в REAMDE, создал файл кода с расширением .ipynb, добавил выбранные датасеты"
+git push origin main
