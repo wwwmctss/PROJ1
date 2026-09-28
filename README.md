@@ -12,18 +12,30 @@
 ### 1) Клонирование 
 
 Переходим в корневую директорию проекта и клонируем проект из удаленного репозитория с помощью команды:
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7b481ec (Изменил данные в README.md, для проверки того, как это выглядит на github.)
 git clone https://github.com/wwwmctss/PROJ1.git
 
 ### 2) Настройка виртуального окружения
 
 Создал изолированное виртуальное окружение Python в корне проекта и активировал его:
+<<<<<<< HEAD
 python3 -m venv .venv_chiki_proj
+=======
+
+python3 -m venv .venv_chiki_proj
+
+>>>>>>> 7b481ec (Изменил данные в README.md, для проверки того, как это выглядит на github.)
 source .venv_chiki_proj/bin/activate
 
 ### 3) Установка зависимостей
 
 Обновил пакетный менеджер pip и установил все требуемые библиотеки, зафиксированные в requirements.txt:
+
 pip install --upgrade pip
+
 pip install -r requirements.txt
 
 ### 4) Подготовка данных
@@ -72,9 +84,13 @@ chiki_proj/
 ## Финальные команды
 
 Убеждаемся что данные не коммитятся:
+
 git status
 
 Фиксируем и отправляем изменения на GitHub:
+
 git add README.md eda/ data/
+
 git commit -m "Добавил изменения в REAMDE, создал файл кода с расширением .ipynb, добавил выбранные датасеты"
+
 git push origin main
