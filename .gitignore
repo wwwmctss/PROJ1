@@ -6,3 +6,7 @@
 
 # Игнорируем папки, начинающиеся с .venv
 .venv*
+
+# MLflow артефакты (кроме скрипта запуска)
+mlflow/mlruns.db
+mlflow/mlartifacts/
