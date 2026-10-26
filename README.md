@@ -109,7 +109,7 @@ git push origin main
 по 4 ценовым категориям (датасет Mobile Price Classification -
 https://www.kaggle.com/datasets/iabhishekofficial/mobile-price-classification).
 
-Цель работы - провести ряд экспериментов по настройке модели, логируя все результаты в MLFlow. Научиться пользоваться инструментами autofeat, mlxtend, MLFlow
+Цель работы - провести ряд экспериментов по настройке модели, логируя все результаты в MLFlow. Научиться пользоваться инструментами MLFlow
 
 # Запуск - Как запустить проект
 
@@ -203,84 +203,51 @@ MLflow запускается локально с хранилищем эксп�
 
 Были проведены следующие эксперименты:
 
-baseline: StandardScaler + TargetEncoder → RandomForest (100 деревьев) -> f1 = 0.8412, roc_auc_ovr = 0.9684
+baseline: StandardScaler + TargetEncoder → RandomForest (100 деревьев) -> f1 = 0.8632, roc_auc = 0.9685
 
-fe_sklearn: PolynomialFeatures(degree=2) для battery_power/ram/px_width, KBinsDiscretizer для clock_speed/mobile_wt -> f1 = 0.8898, roc_auc_ovr = 0.9890
+fe_sklearn: PolynomialFeatures(degree=2) для battery_power/ram/px_width, KBinsDiscretizer для int_memory/mobile_wt -> f1 = 0.9084, roc_auc = 0.9890
 
-rfe_feature_selection: FE sklearn + RFE (отобрано 25 признаков из 50) -> f1 = 0.9117, roc_auc_ovr = 0.9917
+rfe_sklearn: FE sklearn + RFE (отобрано 25 признаков из 50) -> f1 = 0.9125, roc_auc = 0.9898
 
-gridsearch_tuned: RFE-признаки + GridSearchCV по n_estimators, max_depth, max_features -> f1 = 0.9078, roc_auc_ovr = 0.9905
+gridsearch: RFE-признаки + GridSearchCV по n_estimators, max_depth, max_features -> f1 = 0.9122, roc_auc = 0.9903
 
 ### Результаты исследования
 
-Категориальными считал бинарные признаки (blue, dual_sim, four_g, three_g, touch_screen, wifi), к ним применён TargetEncoder. Для числовых признаков применен StandardScaler. В FE добавлены полиномиальные признаки battery_power, ram, px_width (degree=2) и бины для clock_speed, mobile_wt (KBinsDiscretizer, 5 бинов, quantile).
+Категориальными считал бинарные признаки (blue, dual_sim, four_g, three_g, touch_screen, wifi), к ним применён TargetEncoder. Для числовых признаков применен StandardScaler. В FE добавлены полиномиальные признаки battery_power, ram, px_width (degree=2) и бины для int_memory, mobile_wt (KBinsDiscretizer, 5 бинов, quantile).
 
-Отбор признаков сделан методом RFE из sklearn по важности RandomForest. Оставлено 25 признаков (50% от расширенного набора). Полный список сохранён в артефактах MLflow (файлы selected_cols.txt и selected_idx.txt), а также приведён ниже:
+Отбор признаков сделан методом RFE из sklearn по важности RandomForest. Оставлено 25 признаков (50% от расширенного набора). Полный список сохранён в артефактах MLflow (файлы rfe_columns.txt и rfe_idx.txt):
 
 num__battery_power
-
-num__clock_speed
-
+num__fc
 num__int_memory
-
 num__m_dep
-
 num__mobile_wt
-
+num__n_cores
 num__pc
-
 num__px_height
-
 num__px_width
-
 num__ram
-
 num__sc_h
-
+num__sc_w
 num__talk_time
-
 num__screen_area
-
-cat__dual_sim_3
-
-cat__four_g_2
-
-cat__touch_screen_3
-
-cat__wifi_0
-
+cat__blue_2
+cat__wifi_1
 poly__battery_power
-
 poly__ram
-
 poly__px_width
-
 poly__battery_power^2
-
 poly__battery_power ram
-
 poly__battery_power px_width
-
 poly__ram^2
-
 poly__ram px_width
-
 poly__px_width^2
 
+**Лучшая модель.** RFE-пайплайн (`rfe_sklearn`) с f1 = 0.9125 при roc_auc_ovr = 0.9898. Это RandomForestClassifier с параметром n_estimators = 100, остальные - по умолчанию, с препроцессингом (StandardScaler + TargetEncoder + PolynomialFeatures + KBinsDiscretizer) и отбором 25 признаков через RFE.
 
-**Лучшая модель.** Показала наилучшее значение f1 = 0.9117 при roc_auc_ovr = 0.9917. Это RandomForestClassifier с гиперпараметрами:
+Лучший пайплайн обучен на всей выборке (2000 объектов) и залогирован в MLflow как production.
 
-n_estimators = 200
-
-max_depth = 10
-
-max_features = 0.5
-
-с препроцессингом (StandardScaler + TargetEncoder + PolynomialFeatures + KBinsDiscretizer) и отбором 25 признаков через RFE.
-
-Production-модель. Лучший пайплайн обучен на всей выборке (2000 объектов) и залогирован в MLflow как Run production_model.
-
-run_id = c5ae82c9535840fda6977dd957655d25
+run_id = e7abb0fb22744d8c9724d5716e591657
 
 В Model Registry модель mobile_price_model зарегистрирована как Version 3 со stage Production.
 
@@ -292,7 +259,7 @@ run_id = c5ae82c9535840fda6977dd957655d25
 
 Фиксируем и отправляем изменения на GitHub:
 
-**git add research/research.ipynb mlflow/start_mlflow.sh README2.md requirements.txt .gitignore**
+**git add research/ mlflow/ README.md requirements.txt .gitignore**
 
 **git commit -m "LR2_final"**
 
