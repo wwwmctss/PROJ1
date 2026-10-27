@@ -171,7 +171,7 @@ MLflow запускается локально с хранилищем эксп�
 
 После запуска интерфейс MLflow доступен по адресу: http://localhost:5000/
 
-Убедился, что в директории ./mlflow создана база данных mlruns.db.
+Убедился, что в директории ./mlflow создана база данных mlruns.db. А после первого логирования - папка mlartifacts.
 
 ### 6) Запуск исследования
 
@@ -259,7 +259,7 @@ run_id = e7abb0fb22744d8c9724d5716e591657
 
 Фиксируем и отправляем изменения на GitHub:
 
-**git add research/ mlflow/ README.md requirements.txt .gitignore**
+**git add research/ mlflow/ README.md requirements.txt .gitignore screen2/**
 
 **git commit -m "LR2_final"**
 
