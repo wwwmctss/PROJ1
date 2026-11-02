@@ -264,3 +264,45 @@ run_id = e7abb0fb22744d8c9724d5716e591657
 **git commit -m "LR2_final"**
 
 **git push origin main**
+
+# Лабораторная работа №3 - Проведение экспериментов по настройке модели
+
+## Описание проекта
+
+Работа является продолжением лабораторных 1 и 2. В данной рабораторной работе мы работаем с сервисом на FastAPI, который загружает Production-модель `mobile_price_model` (Version 3) из файла `services/models/model.pkl` и возвращает предсказанный ценовой класс смартфона.
+
+Файлы:
+- `services/ml_service/main.py` — FastAPI-приложение, endpoints `/` и `/api/prediction`;
+- `services/ml_service/api_handler.py` — класс `FastAPIHandler`, загрузка модели и предсказание;
+- `services/models/get_model.py` — выгрузка модели из MLflow по `run_id`;
+- `services/models/model.pkl` — локальная копия модели (не коммитится);
+- `services/ml_service/Dockerfile` — сборка образа;
+- `services/ml_service/requirements.txt` — зависимости для образа;
+
+### Запуск сервера
+
+- cd services/ml_service
+
+- uvicorn main:app --host 0.0.0.0 --port 8000
+
+Проверка запуская осуществляется по ссылке http://localhost:8000/docs 
+
+### Сборка и запуск Docker-контейнера
+
+- cd services/ml_service
+
+- docker build . -t mobile-price-service:1
+
+- docker run --name mobile-price-container -p 8000:8000 -v $(pwd)/../models:/models mobile-price-service:1
+
+#### При остановке сервиса выполняются следующие команды:
+
+- docker stop mobile-price-container
+
+- docker rm mobile-price-container
+
+### Проверка работоспособности сервиса через запрос
+
+curl -X POST "http://localhost:8000/api/prediction?item_id=123" \
+  -H "Content-Type: application/json" \
+  -d '{"battery_power":842,"blue":0,"clock_speed":2.2,"dual_sim":0,"fc":1,"four_g":0,"int_memory":7,"m_dep":0.6,"mobile_wt":188,"n_cores":2,"pc":2,"px_height":20,"px_width":756,"ram":2549,"sc_h":9,"sc_w":7,"talk_time":19,"three_g":0,"touch_screen":0,"wifi":1,"screen_area":63}'

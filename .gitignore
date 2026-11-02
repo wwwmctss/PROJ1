@@ -10,3 +10,6 @@
 # MLflow артефакты (кроме скрипта запуска)
 mlflow/mlruns.db
 mlflow/mlartifacts/
+
+# Скомпилированные байт-код модули .pyc
+__pycache__/
